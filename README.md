@@ -1,8 +1,10 @@
 # Discord RPC - MPRIS
 
-> A Discord Rich Presence client that connects to MPRIS
+![Example](img/example.png)
 
-This is a super simple RPC client that connects to any MPRIS client and shows your current song.
+> A Discord Rich Presence client that connects to MPRIS music players
+
+This is a super simple RPC client that connects to any MPRIS music player and shows your current song, as well as a nifty little image.
 
 ## Installation
 
