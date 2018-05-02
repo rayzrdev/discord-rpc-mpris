@@ -1,0 +1,3 @@
+dbus-python==1.2.4
+pympris==1.4
+pypresence==1.0.9
