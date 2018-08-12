@@ -1,3 +1,4 @@
 dbus-python==1.2.4
 pympris==1.4
 pypresence==1.0.9
+pygobject==3.28.3
