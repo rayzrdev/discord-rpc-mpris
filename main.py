@@ -24,9 +24,12 @@ def connect_rpc():
         except ConnectionRefusedError as e:
             print("Failed to connect to RPC! Trying again in 10 seconds...")
             time.sleep(10)
-        except FileNotFoundError as e:
+        except (FileNotFoundError, AttributeError) as e:
             print("RPC failed to connect due to Discord not being opened yet. Please open it. Reconnecting in 10 seconds...")
             time.sleep(10)
+
+# Connect to Discord
+connect_rpc()
 
 def setup_player(name):
     player = Playerctl.Player.new_from_name(name)
@@ -86,5 +89,4 @@ for name in manager.props.player_names:
     setup_player(name)
 
 # Start program, connect to Discord & hook into GLib's main loop
-connect_rpc()
 GLib.MainLoop().run()
