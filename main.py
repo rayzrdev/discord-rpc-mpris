@@ -24,6 +24,9 @@ def connect_rpc():
         except ConnectionRefusedError as e:
             print("Failed to connect to RPC! Trying again in 10 seconds...")
             time.sleep(10)
+        except FileNotFoundError as e:
+            print("RPC failed to connect due to Discord not being opened yet. Please open it. Reconnecting in 10 seconds...")
+            time.sleep(10)
 
 def setup_player(name):
     player = Playerctl.Player.new_from_name(name)
