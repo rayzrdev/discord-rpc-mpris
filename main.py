@@ -6,48 +6,61 @@ import sys
 import time
 import pypresence
 import gi
-gi.require_version('Playerctl', '1.0')
+gi.require_version('Playerctl', '2.0')
 
 from gi.repository import Playerctl, GLib
 
-player = Playerctl.Player()
-while player.get_property('status') == "":
-    print("Waiting for player...")
-    time.sleep(5)
+manager = Playerctl.PlayerManager()
 
 print("Starting RPC client...")
 RPC = pypresence.Presence('440997014315204609')
 RPC.connect()
 print("RPC client connected")
 
-def getSong():
+def setup_player(name):
+    player = Playerctl.Player.new_from_name(name)
+    player.connect('playback-status::playing', on_play, manager)
+    player.connect('playback-status::paused', on_pause, manager)
+    player.connect('metadata', on_metadata, manager)
+    update(player)
+    manager.manage_player(player)
+
+def get_song(player):
     return "%s - %s" % (player.get_title(), player.get_artist())
 
-def update():
-    print("Updating")
+def update(player):
     status = player.get_property('status')
 
     if status == "":
         RPC.clear()
     elif status == "Playing":
-        song = getSong()
+        song = get_song(player)
         RPC.update(state='Playing', details=song, large_image='music', large_text=song, small_image='play')
     elif status == "Paused":
         RPC.update(state='Paused', large_image='music', small_image='pause')
 
-def on_play(player):
-    update()
+def on_play(player, status, manager):
+    update(player)
 
-def on_pause(player):
-    update()
+def on_pause(player, status, manager):
+    update(player)
 
-def on_metadata(player, e):
-    update()
+def on_metadata(player, metadata, manager):
+    update(player)
 
-player.on('play', on_play)
-player.on('pause', on_pause)
-player.on('metadata', on_metadata)
+def on_player_add(manager, name):
+    setup_player(name)
 
-update()
+def on_player_remove(manager, player):
+    if len(manager.props.players) < 1:
+        RPC.clear()
+    else:
+        update(manager.props.players[0])
+
+manager.connect('name-appeared', on_player_add)
+manager.connect('player-vanished', on_player_remove)
+
+for name in manager.props.player_names:
+    setup_player(name)
 
 GLib.MainLoop().run()
