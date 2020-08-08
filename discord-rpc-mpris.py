@@ -76,7 +76,7 @@ def on_player_remove(manager, player):
         try:
             RPC.clear()
         except pypresence.exceptions.InvalidID:
-            if e is "Client ID is Invalid":
+            if e == "Client ID is Invalid":
                 print("Lost connection to Discord RPC! Attempting reconnection...")
                 connect_rpc()
             else:
