@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
     name="discord-rpc-mpris",
     version="1.0.0",
-    scripts=["discord-rpc-mpris.py"],
+    scripts=["discord-rpc-mpris"],
     author="Rayzr522",
     url="https://github.com/RayzrDev/discord-rpc-mpris",
     install_requires=[
