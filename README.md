@@ -10,26 +10,33 @@ This is a super simple RPC client that connects to any MPRIS music player and sh
 
 This project requires Python to be installed, and is only functional on Unix operating systems due to the nature of MPRIS.
 
-1. Clone this repository:
-
+### User installation
 ```bash
-git clone https://github.com/RayzrDev/discord-rpc-mpris.git
-cd discord-rpc-mpris
+pip install --user git+https://github.com/RayzrDev/discord-rpc-mpris@master
 ```
 
-2. Install the requirements:
-
-```bash
-pip install -r requirements.txt
-```
+### Virtualenv installation
+1. Create a virtual env
+   ```bash
+   python3 -m venv .env
+   ```
+2. Activate the venv
+   ```bash
+   . .env/bin/activate
+   ```
+3. Install it
+   ```bash
+   pip install git+https://github.com/RayzrDev/discord-rpc-mpris@master
+   ```
 
 ## Usage
 
-Just `cd` into the `dicord-rpc-mpris` folder and run the following:
+### With the user installation
+Just run the `discord-rpc-mpris` command, I hope.
 
-```bash
-python main.py
-```
+### Virtualenv installation
+1. Activate the virtualenv `. path/to/virtual/env/bin/activate`
+2. Run `discord-rpc-mpris`
 
 The client will connect to your account.
 
