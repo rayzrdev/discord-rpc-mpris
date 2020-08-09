@@ -4,16 +4,16 @@ A simple Discord Rich Presence client that connects to MPRIS and shows your curr
 
 import sys
 import time
-import pypresence
 import gi
 gi.require_version('Playerctl', '2.0')
 
 from gi.repository import Playerctl, GLib
+from pypresence import Presence
 
 manager = Playerctl.PlayerManager()
 
 print("Starting RPC client...")
-RPC = pypresence.Presence('440997014315204609')
+RPC = Presence('440997014315204609')
 
 def connect_rpc():
     while True:
@@ -28,16 +28,13 @@ def connect_rpc():
             print("RPC failed to connect due to Discord not being opened yet. Please open it. Reconnecting in 10 seconds...")
             time.sleep(10)
 
-# Connect to Discord
-connect_rpc()
-
 def setup_player(name):
     player = Playerctl.Player.new_from_name(name)
     player.connect('playback-status::playing', on_play, manager)
     player.connect('playback-status::paused', on_pause, manager)
     player.connect('metadata', on_metadata, manager)
-    update(player)
     manager.manage_player(player)
+    update(player)
 
 def get_song(player):
     return "%s - %s" % (player.get_title(), player.get_artist())
@@ -74,7 +71,7 @@ def on_player_remove(manager, player):
         try:
             RPC.clear()
         except pypresence.exceptions.InvalidID:
-            if e is "Client ID is Invalid":
+            if e == "Client ID is Invalid":
                 print("Lost connection to Discord RPC! Attempting reconnection...")
                 connect_rpc()
             else:
@@ -85,8 +82,10 @@ def on_player_remove(manager, player):
 manager.connect('name-appeared', on_player_add)
 manager.connect('player-vanished', on_player_remove)
 
+# Start program, connect to Discord, setup existing players & hook into GLib's main loop
+connect_rpc()
+
 for name in manager.props.player_names:
     setup_player(name)
 
-# Start program, connect to Discord & hook into GLib's main loop
 GLib.MainLoop().run()
