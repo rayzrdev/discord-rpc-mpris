@@ -8,7 +8,7 @@ import gi
 gi.require_version('Playerctl', '2.0')
 
 from gi.repository import Playerctl, GLib
-from pypresence import Presence
+from pypresence import Presence, exceptions
 
 manager = Playerctl.PlayerManager()
 
@@ -50,7 +50,7 @@ def update(player):
             RPC.update(state='Playing', details=song, large_image='music', large_text=song, small_image='play')
         elif status == "Paused":
             RPC.update(state='Paused', large_image='music', small_image='pause')
-    except pypresence.exceptions.InvalidID:
+    except exceptions.InvalidID:
         print("Lost connection to Discord RPC! Attempting reconnection...")
         connect_rpc()
 
@@ -70,7 +70,7 @@ def on_player_remove(manager, player):
     if len(manager.props.players) < 1:
         try:
             RPC.clear()
-        except pypresence.exceptions.InvalidID:
+        except exceptions.InvalidID:
             if e == "Client ID is Invalid":
                 print("Lost connection to Discord RPC! Attempting reconnection...")
                 connect_rpc()
